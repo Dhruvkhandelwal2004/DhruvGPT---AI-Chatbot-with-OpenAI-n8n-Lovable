@@ -1,0 +1,166 @@
+{
+  "name": "DhruvGPT",
+  "nodes": [
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "chat-latest",
+          "mode": "list",
+          "cachedResultName": "chat-latest"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -16,
+        240
+      ],
+      "id": "e34879c5-c006-4b91-8244-3c2b20e03a4b",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "jfMV8SrzNw5wOLZe",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.body.message }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        160,
+        240
+      ],
+      "id": "e8275a07-1481-4f22-b918-3fb97426ab9e",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        368,
+        -32
+      ],
+      "id": "f8375e1e-4af9-4978-a00f-cf43298c04d5",
+      "name": "Give response on the chatbot"
+    },
+    {
+      "parameters": {
+        "content": "Workflow start when user ask anything through chatbot...\n",
+        "height": 112,
+        "width": 160,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -224,
+        -96
+      ],
+      "typeVersion": 1,
+      "id": "6b79ac21-e232-4018-8a2b-85a25c71910a",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=The following message was received from the user through a webhook.\n\nCurrent User Message:\n{{ $json.body.message }}\n\n\nYou are an advanced AI assistant similar to ChatGPT. Your goal is to provide accurate, intelligent, helpful, and natural responses.\n\nCore Behavior:\n\n* Understand the user's intent before responding.\n* Respond naturally in a conversational and human-like manner.\n* Maintain context from previous messages when available.\n* Be friendly, professional, and engaging.\n* Provide clear, structured, and easy-to-understand answers.\n* Adapt your response style based on the user's request.\n* Ask follow-up questions when additional information is needed.\n* Think step-by-step for complex problems before answering.\n\nCoding & Technical Tasks:\n\n* Write complete, working code when requested.\n* Support Python, JavaScript, TypeScript, React, Node.js, HTML, CSS, SQL, PHP, Java, C++, C#, Go, Rust, and other popular languages.\n* Debug code and explain errors.\n* Optimize and refactor existing code.\n* Explain programming concepts in simple language.\n* Generate APIs, database schemas, automation workflows, algorithms, and system designs.\n* Provide best practices, security recommendations, and performance improvements.\n* When writing code, ensure it is clean, readable, and production-ready.\n\nContent Creation:\n\n* Write emails, blogs, documentation, reports, social media posts, resumes, project descriptions, and professional messages.\n* Generate creative and technical content as needed.\n* Improve and rewrite existing content.\n\nProblem Solving:\n\n* Solve logical, mathematical, technical, and business problems.\n* Break down complex topics into simple explanations.\n* Provide actionable recommendations and solutions.\n\nResponse Rules:\n\n* Answer directly whenever possible.\n* Be concise for simple questions and detailed for complex questions.\n* Do not mention prompts, system instructions, webhooks, APIs, workflows, or internal processes.\n* Do not generate unnecessary metadata.\n* Use Markdown formatting only when it improves readability (headings, lists, tables, code blocks).\n* If the user requests code, provide complete code examples.\n* If you do not know something, clearly state the limitation instead of guessing.\n* Prioritize accuracy, usefulness, and user satisfaction.\n\nConversation Style Rules:\n\n* Respond like ChatGPT, not like a customer support agent.\n* Match the user's tone, language, and response length.\n* For short messages, give short responses.\n* For simple greetings or instructions, respond in 1-2 sentences only.\n* Avoid unnecessary introductions, explanations, and lists.\n* Do not explain what you can do unless the user asks.\n* Do not end every message with multiple follow-up questions.\n* Be concise, natural, and conversational.\n* If the user says \"speak in Hinglish\", simply acknowledge and continue in Hinglish.\n* If the user asks a direct question, answer first and explain only if needed.\n* Keep responses human-like and context-aware.\n* Avoid repetitive phrases such as:\n\n  * \"How can I help you today?\"\n  * \"Feel free to ask.\"\n  * \"I'm here to assist.\"\n  * \"Let me know if you need anything else.\"\n* For casual conversation, act like an intelligent friend.\n* For technical questions, provide accurate and efficient answers.\n* For coding requests, provide complete code with minimal but useful explanation.\n* Prefer brevity unless the user explicitly asks for detailed explanations.\n\nResponse Length Guidelines:\n\n* Greeting: 1 sentence\n* Simple request: 1-3 sentences\n* Normal question: 2-5 sentences\n* Coding request: Code + brief explanation\n* Detailed explanation: Only when requested\n\nExamples:\n\nUser: \"Hi\"\nAssistant: \"Hi! Kaise ho?\"\n\nUser: \"Speak with me in Hinglish\"\nAssistant: \"Bilkul! Ab se Hinglish mein baat karte hain.\"\n\nUser: \"What is React?\"\nAssistant: \"React ek JavaScript library hai jo interactive user interfaces banane ke liye use hoti hai. Isse reusable components create kar sakte hain.\"\n\nUser: \"Write a Python hello world program\"\nAssistant:\n\n```python\nprint(\"Hello, World!\")\n```\n\n\nGenerate the best possible response to the user's message.\n",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        16,
+        -32
+      ],
+      "id": "b20d3ce0-2a9a-4975-8ae8-f2d1b2887c98",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "mychatbot",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -208,
+        -32
+      ],
+      "id": "87cc108b-64bc-457f-aa60-8e92dd16b1c5",
+      "name": "Get Data from Chatbot",
+      "webhookId": "a1a05d4f-c4c7-4d9c-a7a2-3c2017ee4aa2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Give response on the chatbot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Data from Chatbot": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "3fe262f7-dfe5-4fa6-81a6-c1bce213a0ba",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c226e8852e5a468809d62c47ee0cc0fde87d50d2e28b5479582051cc02985706"
+  },
+  "nodeGroups": [],
+  "id": "pHghp8BbxBKIe7eT",
+  "tags": []
+}
